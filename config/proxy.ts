@@ -9,6 +9,15 @@
  *
  * @doc https://umijs.org/docs/guides/proxy
  */
+
+let DEV_SERVER = 'http://127.0.0.1:8000';
+// Keep in mind that the proxy's url should take IP but not 'localhost'
+if (process.env.DEV_SERVER) {
+  DEV_SERVER = process.env.DEV_SERVER;
+}
+
+console.log('DEV_SERVER:', DEV_SERVER);
+
 export default {
   // 如果需要自定义本地开发服务器  请取消注释按需调整
   // dev: {
@@ -21,6 +30,13 @@ export default {
   //     changeOrigin: true,
   //   },
   // },
+
+  dev: {
+    '/api/': {
+      target: DEV_SERVER,
+      changeOrigin: true,
+    }
+  },
 
   /**
    * @name 详细的代理配置
