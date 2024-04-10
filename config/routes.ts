@@ -29,6 +29,12 @@ export default [
     component: './Welcome',
   },
   {
+    path: '/overall',
+    name: 'Overall',
+    icon: 'global',
+    component: './Overall'
+  },
+  {
     path: '/dev',
     name: 'Development',
     icon: 'code',
