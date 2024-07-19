@@ -21,14 +21,24 @@ console.log('index.tsx, process.env.AMAP_TOKEN:', process.env.UMI_APP_AMAP_TOKEN
 // const dataUrl = 'https://gw.alipayobjects.com/os/basement_prod/d36ad90e-3902-4742-b8a2-d93f7e5dafa2.json'
 // const dataUrl = 'https://raw.githubusercontent.com/leakyMirror/map-of-europe/master/GeoJSON/europe.geojson'
 // const dataUrl = 'https://raw.githubusercontent.com/rapomon/geojson-places/master/data/continents/EU.json'
-const dataUrl = 'https://raw.githubusercontent.com/rapomon/geojson-places/master/data/countries/CN.json'
-
-
+// const dataUrl = 'https://raw.githubusercontent.com/rapomon/geojson-places/master/data/countries/JP.json'
+const dataUrl = 'geo_data/custom.geo.europe.json'
+const regionColors = {
+  'U.S.A.': '#0f9960',
+  'China': '#9d60ff',
+  'Russia': '#377eb8'
+}
 const layerOptions: Omit<ChoroplethLayerProps, 'source'> = {
   autoFit: true,
   fillColor: {
-    field: 'adcode',
-    value: ['#0f9960', '#33a02c', '#377eb8'],
+    field: 'abbrev',
+    // value: ['#0f9960', '#33a02c', '#377eb8'],
+    value: (field) => {
+      const regionName = field['abbrev']
+      console.log('field:', field, regionName)
+
+      return regionColors[field['abbrev']] || '#ff3300'
+    }
   },
   opacity: 0.3,
   strokeColor: 'blue',
@@ -57,16 +67,18 @@ export default class OverallPage extends React.Component<any, any> {
     }
   }
 
-  componentDidMount() {
-    request(dataUrl, {
-      method: 'get'
-    }).then(res => {
-      console.log(res)
-      this.setState({
-        source: {
-          data: res
+  async componentDidMount() {
+    const usData = await request(`geo_data/custom.geo.us.json`)
+    const cnData = await request('geo_data/custom.geo.china.json')
+    const ruData = await request('geo_data/custom.geo.ru.json')
+    const weuData = await request('geo_data/custom.geo.weu.json')
+    this.setState({
+      source: {
+        data: {
+          type: 'FeatureCollection',
+          features: usData.features.concat(cnData.features).concat(ruData.features).concat(weuData.features)
         }
-      })
+      }
     })
   }
 
