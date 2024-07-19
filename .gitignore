@@ -40,6 +40,5 @@ screenshot
 
 build
 
-
 # Local envs for development
 .env.local
