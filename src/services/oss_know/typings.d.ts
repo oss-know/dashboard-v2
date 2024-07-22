@@ -4,14 +4,18 @@ declare namespace API {
   //   repo?: stirng,
   // }
 
-
   type RepoCommit = {
-    date?: string,
-    commits?: number,
-  }
+    date?: string;
+    commits?: number;
+  };
 
   type RepoRelease = {
-    date?: string,
-    releases?: number,
-  }
+    date?: string;
+    releases?: number;
+  };
+
+  type OwnerRepo = {
+    owner: string;
+    repo: string;
+  };
 }
