@@ -1,3 +1,4 @@
+import { RegionSocialInfluenceChart } from '@/pages/Statistics/InfluenceCharts/components';
 import {
   listRegionSocialInfluenceProjects,
   projectRegionSocialInfluence,
@@ -12,6 +13,7 @@ export default class InfluenceChartsPage extends React.Component<any, any> {
     this.state = {
       projectOptions: [],
       selectedProjects: [],
+      chartDataList: [],
     };
 
     this.projectsSelectChange = this.projectsSelectChange.bind(this);
@@ -21,7 +23,6 @@ export default class InfluenceChartsPage extends React.Component<any, any> {
 
   componentDidMount() {
     listRegionSocialInfluenceProjects().then((projects) => {
-      console.log(projects);
       this.setState({
         projectOptions: projects.map((p) => {
           const { owner, repo } = p;
@@ -42,7 +43,6 @@ export default class InfluenceChartsPage extends React.Component<any, any> {
 
   projectsSelectDropdownChange(visible: boolean): void {
     if (!visible) {
-      console.log('we should request with', this.state.selectedProjects);
       const ownerRepos = this.state.selectedProjects.map((option) => {
         const parts = option.value.split('/');
         const owner = parts[0];
@@ -53,7 +53,26 @@ export default class InfluenceChartsPage extends React.Component<any, any> {
         };
       });
       projectRegionSocialInfluence(ownerRepos).then((result) => {
-        console.log(result);
+        // Split result into different groups by (owner, repo), since Ant Design chart can't be filtered like Excel chart
+        const chartDataMap: any = {};
+        for (const item of result) {
+          const { owner, repo } = item;
+          const key = `${owner}__${repo}`;
+          if (chartDataMap.hasOwnProperty(key)) {
+            chartDataMap[key].push(item);
+          } else {
+            chartDataMap[key] = [item];
+          }
+        }
+
+        const chartDataList = [];
+        for (const key in chartDataMap) {
+          chartDataList.push(chartDataMap[key]);
+        }
+
+        this.setState({
+          chartDataList,
+        });
       });
     }
   }
@@ -84,7 +103,15 @@ export default class InfluenceChartsPage extends React.Component<any, any> {
           </Col>
         </Row>
         <Divider />
-        <div>the charts</div>
+        <Row>
+          {this.state.chartDataList.map((chartData, index) => {
+            return (
+              <Col span={12} key={`region_social_influence_chart__${index}`}>
+                <RegionSocialInfluenceChart data={chartData} />
+              </Col>
+            );
+          })}
+        </Row>
       </div>
     );
   }
