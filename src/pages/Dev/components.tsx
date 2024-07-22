@@ -1,17 +1,16 @@
 // @ts-nocheck
 
-import {Column, Line} from '@ant-design/plots'
-import React from "react";
-import {getRepoCommits, getRepoReleases} from "@/services/oss_know/contrib";
+import { Column, Line } from '@ant-design/plots';
+import React from 'react';
+import { getRepoCommits, getRepoReleases } from '@/services/oss_know/contrib';
 
 interface ProjectProps extends React.ComponentProps<any> {
-  owner: string,
-  repo: string,
+  owner: string;
+  repo: string;
 }
 
 // const commitsDemoData = await commitsSampleData()
 //
-
 
 export class CommitsLineChart extends React.Component<ProjectProps, any> {
   private static chartConf = {
@@ -19,17 +18,17 @@ export class CommitsLineChart extends React.Component<ProjectProps, any> {
     // TODO description is removed in newer ant design charts
     // description: "rust是一种高性能、内存安全的系统编程语言，广泛应用于操作系统、驱动、基础中间件甚至游戏、计算机图形等领域",
     legend: {
-      flipPage: false
+      flipPage: false,
     },
     xField: 'date',
     yField: 'commits',
     width: 600,
     height: 400,
-  }
+  };
 
-  private static getAnnotations = ((maxCommitItem: any, avgValue, firstCommitItem) => {
-    const {date: maxCommitDate, commits: maxCommitCount} = maxCommitItem
-    const dateStr = `${maxCommitDate.getFullYear()}-${maxCommitDate.getMonth() + 1}`
+  private static getAnnotations = (maxCommitItem: any, avgValue, firstCommitItem) => {
+    const { date: maxCommitDate, commits: maxCommitCount } = maxCommitItem;
+    const dateStr = `${maxCommitDate.getFullYear()}-${maxCommitDate.getMonth() + 1}`;
     return [
       {
         type: 'text',
@@ -61,22 +60,22 @@ export class CommitsLineChart extends React.Component<ProjectProps, any> {
         type: 'lineY',
         yField: avgValue,
         style: {
-          stroke: 'rgba(201,14,103,0.89)'
-        }
+          stroke: 'rgba(201,14,103,0.89)',
+        },
       },
       {
         type: 'text',
         shape: 'text',
         encode: {
-          text: `Average commits: ${avgValue}`
+          text: `Average commits: ${avgValue}`,
         },
         style: {
           textBaseline: 'bottom',
-          fontSize: 12
+          fontSize: 12,
         },
         yField: avgValue,
         xField: firstCommitItem.date,
-      }
+      },
 
       // {
       //   type: 'rangeX',
@@ -109,43 +108,46 @@ export class CommitsLineChart extends React.Component<ProjectProps, any> {
       //         dy: -10,
       //     },
       // }
-    ]
-  })
+    ];
+  };
 
   constructor(props: any) {
-    super(props)
+    super(props);
     this.state = {
       commits: [],
       maxCommitItem: {},
-    }
-
+    };
   }
 
   componentDidMount() {
     getRepoCommits(this.props.owner, this.props.repo).then((commits: any) => {
-      console.debug('DEBUG: ', commits)
+      console.debug('DEBUG: ', commits);
       const maxCommitItem = commits.reduce((prev: any, current: any) => {
-        return (prev && prev.commits > current.commits) ? prev : current
-      })
+        return prev && prev.commits > current.commits ? prev : current;
+      });
 
-      const sumCommitValue = commits.reduce((accumulate, current) => accumulate + current.commits, 0)
-      const averageCommitValue = Math.round(sumCommitValue / commits.length)
+      const sumCommitValue = commits.reduce(
+        (accumulate, current) => accumulate + current.commits,
+        0,
+      );
+      const averageCommitValue = Math.round(sumCommitValue / commits.length);
       this.setState({
         commits,
         maxCommitItem,
         annotations: CommitsLineChart.getAnnotations(maxCommitItem, averageCommitValue, commits[0]),
-      })
-    })
-
+      });
+    });
   }
 
   render() {
-    return <Line
-      title={`${this.props.owner}/${this.props.repo} commits history`}
-      data={this.state.commits}
-      annotations={this.state.annotations}
-      {...CommitsLineChart.chartConf}
-    />
+    return (
+      <Line
+        title={`${this.props.owner}/${this.props.repo} commits history`}
+        data={this.state.commits}
+        annotations={this.state.annotations}
+        {...CommitsLineChart.chartConf}
+      />
+    );
   }
 }
 
@@ -153,7 +155,6 @@ export class ReleaseColumnChart extends React.Component<ProjectProps, any> {
   private static chartConf = {
     xField: 'date',
     yField: 'releases',
-
 
     annotations: [
       // {
@@ -167,11 +168,11 @@ export class ReleaseColumnChart extends React.Component<ProjectProps, any> {
     axis: {
       x: {
         labelFormatter: (datum: any, index: any) => {
-          return datum.getFullYear() + '-' + datum.getMonth()
-        }
-      }
-    }
-  }
+          return datum.getFullYear() + '-' + datum.getMonth();
+        },
+      },
+    },
+  };
 
   constructor(props: ProjectProps) {
     super(props);
@@ -179,19 +180,22 @@ export class ReleaseColumnChart extends React.Component<ProjectProps, any> {
     this.state = {
       releases: [],
       maxReleaseItem: {},
-    }
+    };
   }
 
   componentDidMount() {
     getRepoReleases(this.props.owner, this.props.repo).then((releases: any) => {
-      console.debug('raw rels:', releases)
-      console.log(typeof(releases[0].date))
+      console.debug('raw rels:', releases);
+      console.log(typeof releases[0].date);
       let maxReleaseItem = releases.reduce((prev: any, current: any) => {
-        return (prev && prev.releases > current.releases) ? prev : current
+        return prev && prev.releases > current.releases ? prev : current;
       }, 0);
 
-      const sumReleaseValue = releases.reduce((accumulate:any, current:any) => accumulate + current.releases, 0)
-      const averageReleaseValue = sumReleaseValue / releases.length
+      const sumReleaseValue = releases.reduce(
+        (accumulate: any, current: any) => accumulate + current.releases,
+        0,
+      );
+      const averageReleaseValue = sumReleaseValue / releases.length;
 
       this.setState({
         releases,
@@ -199,9 +203,9 @@ export class ReleaseColumnChart extends React.Component<ProjectProps, any> {
         label: {
           text: (d: any) => {
             if (d.releases === maxReleaseItem.releases) {
-              return `Max release: ${d.releases}`
+              return `Max release: ${d.releases}`;
             }
-            return d.releases
+            return d.releases;
           },
           textBaseline: 'bottom',
         },
@@ -214,18 +218,19 @@ export class ReleaseColumnChart extends React.Component<ProjectProps, any> {
             return '#2989FF';
           },
         },
-
-      })
-    })
+      });
+    });
   }
 
   render() {
-    return <Column
-      title={`${this.props.owner}/${this.props.repo} release history`}
-      label={this.state.label}
-      style={this.state.style}
-      data={this.state.releases}
-      {...ReleaseColumnChart.chartConf}
-    />;
+    return (
+      <Column
+        title={`${this.props.owner}/${this.props.repo} release history`}
+        label={this.state.label}
+        style={this.state.style}
+        data={this.state.releases}
+        {...ReleaseColumnChart.chartConf}
+      />
+    );
   }
 }

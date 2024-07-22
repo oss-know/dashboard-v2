@@ -1,10 +1,10 @@
-import React from "react";
-import {Line} from "@ant-design/charts";
-import {Col, Row} from "antd";
-import {CommitsLineChart, ReleaseColumnChart} from "@/pages/Dev/components";
+import React from 'react';
+import { Line } from '@ant-design/charts';
+import { Col, Row } from 'antd';
+import { CommitsLineChart, ReleaseColumnChart } from '@/pages/Dev/components';
 
-const owner: string = 'rust-lang'
-const repo: string = 'rust'
+const owner: string = 'rust-lang';
+const repo: string = 'rust';
 export default class Dev extends React.Component<any, any> {
   // constructor(props:any) {
   //   super(props);
@@ -20,13 +20,15 @@ export default class Dev extends React.Component<any, any> {
   //   })
   // }
   render() {
-    return <Row>
-      <Col>
-        <CommitsLineChart owner={owner} repo={repo}/>
-      </Col>
-      <Col>
-        <ReleaseColumnChart owner={owner} repo={repo}/>
-      </Col>
-    </Row>
+    return (
+      <Row>
+        <Col>
+          <CommitsLineChart owner={owner} repo={repo} />
+        </Col>
+        <Col>
+          <ReleaseColumnChart owner={owner} repo={repo} />
+        </Col>
+      </Row>
+    );
   }
 }
