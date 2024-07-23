@@ -6,7 +6,8 @@ export class RegionSocialInfluenceChart extends React.Component<any, any> {
     xField: (d) => {
       return d.year + ' Q' + d.quarter;
     },
-    yField: 'social_influence_value',
+    // yField: 'social_influence_value',
+    yField: 'mapped_social_influence_value',
     colorField: 'login_location',
     // The normalize might make some data into NaN or infinity
     // normalize: { basis: 'first', groupBy: 'color' },

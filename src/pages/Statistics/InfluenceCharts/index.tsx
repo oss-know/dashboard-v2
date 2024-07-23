@@ -55,13 +55,32 @@ export default class InfluenceChartsPage extends React.Component<any, any> {
       projectRegionSocialInfluence(ownerRepos).then((result) => {
         // Split result into different groups by (owner, repo), since Ant Design chart can't be filtered like Excel chart
         const chartDataMap: any = {};
+        const chartMaxVals: any = {};
+
         for (const item of result) {
           const { owner, repo } = item;
           const key = `${owner}__${repo}`;
-          if (chartDataMap.hasOwnProperty(key)) {
-            chartDataMap[key].push(item);
+
+          if (chartMaxVals.hasOwnProperty(key)) {
+            if (chartMaxVals[key] < item.social_influence_value) {
+              chartMaxVals[key] = item.social_influence_value;
+            }
           } else {
-            chartDataMap[key] = [item];
+            chartMaxVals[key] = item.social_influence_value;
+          }
+        }
+
+        for (const item of result) {
+          const { owner, repo } = item;
+          const key = `${owner}__${repo}`;
+          const temp = { ...item };
+          temp.mapped_social_influence_value =
+            (temp.social_influence_value / chartMaxVals[key]) * 100;
+
+          if (chartDataMap.hasOwnProperty(key)) {
+            chartDataMap[key].push(temp);
+          } else {
+            chartDataMap[key] = [temp];
           }
         }
 
