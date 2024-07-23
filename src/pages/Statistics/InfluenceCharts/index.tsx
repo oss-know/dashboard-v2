@@ -1,7 +1,9 @@
 import { RegionSocialInfluenceChart } from '@/pages/Statistics/InfluenceCharts/components';
 import {
+  downloadPivotTable,
   listRegionSocialInfluenceProjects,
   projectRegionSocialInfluence,
+  projectRegionSocialInfluencePivotTable,
 } from '@/services/oss_know/influence';
 import { Col, Divider, Row, Select } from 'antd';
 import React from 'react';
@@ -14,12 +16,26 @@ export default class InfluenceChartsPage extends React.Component<any, any> {
       projectOptions: [],
       selectedProjects: [],
       chartDataList: [],
+      dataLoaded: false,
     };
 
     this.projectsSelectChange = this.projectsSelectChange.bind(this);
     this.projectsSelectDropdownChange = this.projectsSelectDropdownChange.bind(this);
     this.projectsSelectClear = this.projectsSelectClear.bind(this);
+    this.genAndDownloadPivotTable = this.genAndDownloadPivotTable.bind(this);
   }
+
+  static projectOptions2ReqBody = (options) => {
+    return options.map((option) => {
+      const parts = option.value.split('/');
+      const owner = parts[0];
+      const repo = parts[1];
+      return {
+        owner,
+        repo,
+      };
+    });
+  };
 
   componentDidMount() {
     listRegionSocialInfluenceProjects().then((projects) => {
@@ -42,16 +58,11 @@ export default class InfluenceChartsPage extends React.Component<any, any> {
   }
 
   projectsSelectDropdownChange(visible: boolean): void {
+    this.setState({
+      dataLoaded: false,
+    });
     if (!visible) {
-      const ownerRepos = this.state.selectedProjects.map((option) => {
-        const parts = option.value.split('/');
-        const owner = parts[0];
-        const repo = parts[1];
-        return {
-          owner,
-          repo,
-        };
-      });
+      const ownerRepos = InfluenceChartsPage.projectOptions2ReqBody(this.state.selectedProjects);
       projectRegionSocialInfluence(ownerRepos).then((result) => {
         // Split result into different groups by (owner, repo), since Ant Design chart can't be filtered like Excel chart
         const chartDataMap: any = {};
@@ -91,6 +102,7 @@ export default class InfluenceChartsPage extends React.Component<any, any> {
 
         this.setState({
           chartDataList,
+          dataLoaded: true,
         });
       });
     }
@@ -102,6 +114,24 @@ export default class InfluenceChartsPage extends React.Component<any, any> {
     });
     // might be called unnecessarily, when projectsSelectDropdownChange is triggered with empty project selection
     console.log('we should request with empty owner repos(all data)');
+  }
+
+  genAndDownloadPivotTable() {
+    const ownerRepos = InfluenceChartsPage.projectOptions2ReqBody(this.state.selectedProjects);
+    projectRegionSocialInfluencePivotTable(ownerRepos).then((response) => {
+      const downloadUrl = '/' + response.headers.url;
+
+      downloadPivotTable(downloadUrl).then((blob) => {
+        const eLink = document.createElement('a');
+        eLink.download = downloadUrl.split('/').at(-1); // Set the download file name
+        eLink.style.display = 'none';
+        eLink.href = URL.createObjectURL(blob);
+        document.body.appendChild(eLink);
+        eLink.click();
+        URL.revokeObjectURL(eLink.href); // 释放URL 对象
+        document.body.removeChild(eLink);
+      });
+    });
   }
 
   render() {
@@ -120,6 +150,11 @@ export default class InfluenceChartsPage extends React.Component<any, any> {
               placeholder="Select projects"
             />
           </Col>
+          {this.state.dataLoaded ? (
+            <a onClick={this.genAndDownloadPivotTable}>Download pivot table</a>
+          ) : (
+            <></>
+          )}
         </Row>
         <Divider />
         <Row>

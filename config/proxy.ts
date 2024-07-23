@@ -35,7 +35,12 @@ export default {
     '/api/': {
       target: DEV_SERVER,
       changeOrigin: true,
-    }
+    },
+
+    '/pivot_tables/': {
+      target: DEV_SERVER,
+      changeOrigin: true,
+    },
   },
 
   /**
