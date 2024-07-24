@@ -1,0 +1,19 @@
+version: '0.1'
+
+services:
+  dashboard-v2:
+    container_name: dashboard-v2
+    hostname: dashboard-v2
+    image: dashboard-v2:latest
+    restart: always
+    # 跨多个Docker-compose配置文件，services在一个网桥
+    networks:
+      - overlay-network
+    ports:
+      - "8201:8081"
+
+
+networks:
+  overlay-network:
+    driver: overlay
+    external: true
