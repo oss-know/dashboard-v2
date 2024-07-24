@@ -49,6 +49,8 @@
     "@ant-design/charts": "^2.1.1",
     "@ant-design/icons": "^4.8.1",
     "@ant-design/pro-components": "^2.6.48",
+    "@antv/l7": "^2.22.0",
+    "@antv/larkmap": "^1.4.17",
     "@babel/runtime": "^7.23.9",
     "@umijs/route-utils": "^2.2.2",
     "antd": "^5.13.2",
