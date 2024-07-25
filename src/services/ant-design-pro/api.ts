@@ -1,6 +1,13 @@
 // @ts-ignore
 /* eslint-disable */
-import { request } from '@umijs/max';
+import { extend } from 'umi-request';
+import Session from 'supertokens-web-js/recipe/session';
+const request = extend({
+  credentials: 'include',
+  headers: {
+    'st-auth-mode': 'cookie',
+  },
+});
 
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
@@ -14,15 +21,16 @@ export async function currentUser(options?: { [key: string]: any }) {
 
 /** 退出登录接口 POST /api/login/outLogin */
 export async function outLogin(options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/api/auth/login/outLogin', {
-    method: 'POST',
-    ...(options || {}),
-  });
+  return Session.signOut();
+  // return request<Record<string, any>>('/api/auth/login/outLogin', {
+  //   method: 'POST',
+  //   ...(options || {}),
+  // });
 }
 
 /** 登录接口 POST /api/login/account */
-export async function login(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<API.LoginResult>('/api/auth/login/account', {
+export async function login(body: API.SuperTokensLoginParams, options?: { [key: string]: any }) {
+  return request<API.LoginResult>('/api/auth/signin', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

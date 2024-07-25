@@ -10,6 +10,25 @@ import { errorConfig } from './requestErrorConfig';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
+import SuperTokens from 'supertokens-web-js';
+import Session from 'supertokens-web-js/recipe/session';
+import EmailPassword from 'supertokens-web-js/recipe/emailpassword';
+console.log('AUTH_SERVER:', process.env.AUTH_SERVER);
+SuperTokens.init({
+  appInfo: {
+    // apiDomain: "localhost:5000",
+    apiDomain: process.env.AUTH_SERVER || 'localhost:3100',
+    apiBasePath: '/api/auth',
+    appName: 'ossknow',
+  },
+  recipeList: [
+    Session.init({
+      tokenTransferMethod: 'cookie',
+    }),
+    EmailPassword.init(),
+  ],
+});
+
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */

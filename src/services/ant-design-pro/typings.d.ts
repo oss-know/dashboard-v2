@@ -29,6 +29,15 @@ declare namespace API {
     currentAuthority?: string;
   };
 
+  type SuperTokensFormField = {
+    id: string;
+    value: string;
+  };
+
+  type SuperTokensLoginParams = {
+    formFields: SuperTokensFormField[];
+  };
+
   type PageParams = {
     current?: number;
     pageSize?: number;

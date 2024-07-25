@@ -116,9 +116,22 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (values: API.LoginParams) => {
     try {
+      const supertokenLoginParams: API.SuperTokensLoginParams = {
+        formFields: [
+          {
+            id: 'email',
+            value: values.username!,
+          },
+          {
+            id: 'password',
+            value: values.password!,
+          },
+        ],
+      };
+
       // 登录
-      const msg = await login({ ...values, type });
-      if (msg.status === 'ok') {
+      const msg = await login(supertokenLoginParams);
+      if (msg.status === 'OK') {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
@@ -128,8 +141,13 @@ const Login: React.FC = () => {
         const urlParams = new URL(window.location.href).searchParams;
         history.push(urlParams.get('redirect') || '/');
         return;
+      } else {
+        const defaultLoginFailureMessage = intl.formatMessage({
+          id: 'pages.login.failure',
+          defaultMessage: '登录失败，请重试！',
+        });
+        message.error(defaultLoginFailureMessage);
       }
-      console.log(msg);
       // 如果失败去设置用户错误信息
       setUserLoginState(msg);
     } catch (error) {
