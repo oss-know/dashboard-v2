@@ -1,5 +1,6 @@
 import { RegionSocialInfluenceChart } from '@/pages/Statistics/InfluenceCharts/components';
 import {
+  downloadPivotTable,
   listRegionSocialInfluenceProjects,
   projectRegionSocialInfluence,
   projectRegionSocialInfluencePivotTable,
@@ -16,7 +17,6 @@ export default class InfluenceChartsPage extends React.Component<any, any> {
       selectedProjects: [],
       chartDataList: [],
       dataLoaded: false,
-      pivotTableDownloadUrl: '',
     };
 
     this.projectsSelectChange = this.projectsSelectChange.bind(this);
@@ -60,7 +60,6 @@ export default class InfluenceChartsPage extends React.Component<any, any> {
   projectsSelectDropdownChange(visible: boolean): void {
     this.setState({
       dataLoaded: false,
-      pivotTableDownloadUrl: '',
     });
     if (!visible) {
       const ownerRepos = InfluenceChartsPage.projectOptions2ReqBody(this.state.selectedProjects);
@@ -120,26 +119,24 @@ export default class InfluenceChartsPage extends React.Component<any, any> {
   genAndDownloadPivotTable() {
     this.setState({
       dataLoaded: false,
-      pivotTableDownloadUrl: '',
     });
     const ownerRepos = InfluenceChartsPage.projectOptions2ReqBody(this.state.selectedProjects);
     projectRegionSocialInfluencePivotTable(ownerRepos).then((response) => {
-      const downloadUrl = '/' + response.headers.url;
+      const downloadUrl = `/static/${response.headers.url}`;
       this.setState({
-        pivotTableDownloadUrl: `/static/${downloadUrl}`,
         dataLoaded: true,
       });
 
-      // downloadPivotTable(downloadUrl).then((blob) => {
-      //   const eLink = document.createElement('a');
-      //   eLink.download = downloadUrl.split('/').at(-1); // Set the download file name
-      //   eLink.style.display = 'none';
-      //   eLink.href = URL.createObjectURL(blob);
-      //   document.body.appendChild(eLink);
-      //   eLink.click();
-      //   URL.revokeObjectURL(eLink.href); // 释放URL 对象
-      //   document.body.removeChild(eLink);
-      // });
+      downloadPivotTable(downloadUrl).then((blob) => {
+        const eLink = document.createElement('a');
+        eLink.download = downloadUrl.split('/').at(-1); // Set the download file name
+        eLink.style.display = 'none';
+        eLink.href = URL.createObjectURL(blob);
+        document.body.appendChild(eLink);
+        eLink.click();
+        URL.revokeObjectURL(eLink.href); // 释放URL 对象
+        document.body.removeChild(eLink);
+      });
     });
   }
 
@@ -161,17 +158,7 @@ export default class InfluenceChartsPage extends React.Component<any, any> {
           </Col>
           {this.state.dataLoaded ? (
             <Col>
-              <a onClick={this.genAndDownloadPivotTable}>Generate pivot table</a>
-            </Col>
-          ) : (
-            <></>
-          )}
-          {this.state.pivotTableDownloadUrl ? (
-            <Col>
-              <Divider type="vertical" />{' '}
-              <a href={this.state.pivotTableDownloadUrl} target="_blank" rel="noreferrer">
-                Download pivot table
-              </a>
+              <a onClick={this.genAndDownloadPivotTable}>Download pivot table</a>
             </Col>
           ) : (
             <></>
