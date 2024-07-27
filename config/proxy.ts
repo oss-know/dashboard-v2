@@ -36,9 +36,10 @@ export default {
       changeOrigin: true,
     },
 
-    '/pivot_tables/': {
+    '/static/': {
       target: DEV_SERVER,
       changeOrigin: true,
+      pathRewrite: { '^/static/': ''},
     },
   },
 

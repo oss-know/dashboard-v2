@@ -121,12 +121,12 @@ export default class InfluenceChartsPage extends React.Component<any, any> {
     this.setState({
       dataLoaded: false,
       pivotTableDownloadUrl: '',
-    })
+    });
     const ownerRepos = InfluenceChartsPage.projectOptions2ReqBody(this.state.selectedProjects);
     projectRegionSocialInfluencePivotTable(ownerRepos).then((response) => {
       const downloadUrl = '/' + response.headers.url;
       this.setState({
-        pivotTableDownloadUrl: downloadUrl,
+        pivotTableDownloadUrl: `/static/${downloadUrl}`,
         dataLoaded: true,
       });
 
@@ -160,12 +160,19 @@ export default class InfluenceChartsPage extends React.Component<any, any> {
             />
           </Col>
           {this.state.dataLoaded ? (
-            <Col><a onClick={this.genAndDownloadPivotTable}>Generate pivot table</a></Col>
+            <Col>
+              <a onClick={this.genAndDownloadPivotTable}>Generate pivot table</a>
+            </Col>
           ) : (
             <></>
           )}
           {this.state.pivotTableDownloadUrl ? (
-            <Col><Divider type="vertical"/> <a href={this.state.pivotTableDownloadUrl}>Download pivot table</a></Col>
+            <Col>
+              <Divider type="vertical" />{' '}
+              <a href={this.state.pivotTableDownloadUrl} target="_blank" rel="noreferrer">
+                Download pivot table
+              </a>
+            </Col>
           ) : (
             <></>
           )}
