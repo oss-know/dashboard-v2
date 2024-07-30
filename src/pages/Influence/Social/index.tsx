@@ -1,4 +1,4 @@
-import { RegionSocialInfluenceChart } from '@/pages/Statistics/InfluenceCharts/components';
+import { RegionSocialInfluenceChart } from '@/pages/Influence/Social/components';
 import {
   downloadPivotTable,
   listRegionSocialInfluenceProjects,

@@ -39,7 +39,7 @@ export default {
     '/static/': {
       target: DEV_SERVER,
       changeOrigin: true,
-      pathRewrite: { '^/static/': ''},
+      pathRewrite: { '^/static/': '' },
     },
   },
 

@@ -41,15 +41,15 @@ export default [
     component: './Dev',
   },
   {
-    path: '/statistics',
-    name: 'Statistics',
+    path: '/influence',
+    name: 'Influence',
     icon: 'code',
     // component: './Statistics',
     routes: [
       {
-        path: '/statistics/influence_charts',
-        name: 'Influence Charts',
-        component: './Statistics/InfluenceCharts',
+        path: '/influence/social',
+        name: 'Social',
+        component: './Influence/Social',
       },
     ],
   },
