@@ -42,3 +42,11 @@ export async function listRegionSocialInfluenceProjects(options?: { [key: string
     ...(options || {}),
   });
 }
+
+/** Get projects that have region power influence status GET /api/influence/region/social/projects */
+export async function listRegionPowerInfluenceProjects(options?: { [key: string]: any }) {
+  return request<API.OwnerRepo[]>('/api/influence/region/power/projects', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}

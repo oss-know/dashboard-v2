@@ -1,13 +1,7 @@
-import { RegionSocialInfluenceChart } from '@/pages/Influence/components';
-import {
-  downloadPivotTable,
-  listRegionSocialInfluenceProjects,
-  projectRegionSocialInfluence,
-  projectRegionSocialInfluencePivotTable,
-} from '@/services/oss_know/influence';
-import { Col, Divider, Row, Select, Tabs } from 'antd';
-import React from 'react';
-import RegionSocialInfluence from '@/pages/Influence/Social/region';
+import React from "react";
+import {Tabs} from "antd";
+import RegionSocialInfluence from "@/pages/Influence/Social/region";
+import RegionPowerInfluence from "@/pages/Influence/Power/region";
 
 export default class InfluenceChartsPage extends React.Component<any, any> {
   render() {
@@ -28,7 +22,7 @@ export default class InfluenceChartsPage extends React.Component<any, any> {
           {
             label: 'Region',
             key: 'region',
-            children: <RegionSocialInfluence />,
+            children: <RegionPowerInfluence />,
           },
         ]}
       />

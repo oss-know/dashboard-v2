@@ -1,4 +1,4 @@
-import { RegionSocialInfluenceChart } from '@/pages/Influence/Social/components';
+import { RegionSocialInfluenceChart } from '@/pages/Influence/components';
 import {
   downloadPivotTable,
   listRegionSocialInfluenceProjects,
@@ -8,7 +8,7 @@ import {
 import { Col, Divider, Row, Select } from 'antd';
 import React from 'react';
 
-export default class RegionInfluence extends React.Component<any, any> {
+export default class RegionSocialInfluence extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
 
@@ -62,7 +62,7 @@ export default class RegionInfluence extends React.Component<any, any> {
       dataLoaded: false,
     });
     if (!visible) {
-      const ownerRepos = RegionInfluence.projectOptions2ReqBody(this.state.selectedProjects);
+      const ownerRepos = RegionSocialInfluence.projectOptions2ReqBody(this.state.selectedProjects);
       projectRegionSocialInfluence(ownerRepos).then((result) => {
         // Split result into different groups by (owner, repo), since Ant Design chart can't be filtered like Excel chart
         const chartDataMap: any = {};
@@ -120,7 +120,7 @@ export default class RegionInfluence extends React.Component<any, any> {
     this.setState({
       dataLoaded: false,
     });
-    const ownerRepos = RegionInfluence.projectOptions2ReqBody(this.state.selectedProjects);
+    const ownerRepos = RegionSocialInfluence.projectOptions2ReqBody(this.state.selectedProjects);
     projectRegionSocialInfluencePivotTable(ownerRepos).then((response) => {
       const downloadUrl = `/static/${response.headers.url}`;
       this.setState({

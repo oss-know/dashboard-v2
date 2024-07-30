@@ -47,10 +47,16 @@ export default [
     // component: './Statistics',
     routes: [
       {
+        path: '/influence/power',
+        name: 'Power',
+        component: './Influence/Power',
+      },
+      {
         path: '/influence/social',
         name: 'Social',
         component: './Influence/Social',
       },
+
     ],
   },
   // {
