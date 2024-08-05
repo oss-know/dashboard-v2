@@ -10,9 +10,9 @@ import React from 'react';
 
 interface InfluencePageProps extends React.ComponentProps<any> {
   listProjects: () => Promise<any>;
-  influenceOfProjects: (projects:any[]) => Promise<any>;
-  influencePivotTable: (projects:any[]) => Promise<any>;
-  influenceDataKey: string,
+  influenceOfProjects: (projects: any[]) => Promise<any>;
+  influencePivotTable: (projects: any[]) => Promise<any>;
+  influenceDataKey: string;
 }
 
 class InfluencePage extends React.Component<InfluencePageProps, any> {
@@ -74,7 +74,7 @@ class InfluencePage extends React.Component<InfluencePageProps, any> {
         // Split result into different groups by (owner, repo), since Ant Design chart can't be filtered like Excel chart
         const chartDataMap: any = {};
         const chartMaxVals: any = {};
-        const {influenceDataKey} = this.props
+        const { influenceDataKey } = this.props;
         for (const item of result) {
           const { owner, repo } = item;
           const key = `${owner}__${repo}`;
@@ -92,8 +92,7 @@ class InfluencePage extends React.Component<InfluencePageProps, any> {
           const { owner, repo } = item;
           const key = `${owner}__${repo}`;
           const temp = { ...item };
-          temp.mapped_social_influence_value =
-            (temp[influenceDataKey] / chartMaxVals[key]) * 100;
+          temp.mapped_social_influence_value = (temp[influenceDataKey] / chartMaxVals[key]) * 100;
 
           if (chartDataMap.hasOwnProperty(key)) {
             chartDataMap[key].push(temp);
@@ -320,40 +319,6 @@ export default class RegionPowerInfluence extends React.Component<any, any> {
   }
 
   render() {
-    return (
-      <div>
-        <Row gutter={24}>
-          <Col span={6}>
-            <Select
-              options={this.state.projectOptions}
-              allowClear
-              style={{ width: '100%' }}
-              mode="multiple"
-              onChange={this.projectsSelectChange}
-              onDropdownVisibleChange={this.projectsSelectDropdownChange}
-              onClear={this.projectsSelectClear}
-              placeholder="Select projects"
-            />
-          </Col>
-          {this.state.dataLoaded ? (
-            <Col>
-              <a onClick={this.genAndDownloadPivotTable}>Download pivot table</a>
-            </Col>
-          ) : (
-            <></>
-          )}
-        </Row>
-        <Divider />
-        <Row>
-          {this.state.chartDataList.map((chartData, index) => {
-            return (
-              <Col span={12} key={`region_social_influence_chart__${index}`}>
-                <RegionSocialInfluenceChart data={chartData} />
-              </Col>
-            );
-          })}
-        </Row>
-      </div>
-    );
+    return <div>Implementing</div>;
   }
 }

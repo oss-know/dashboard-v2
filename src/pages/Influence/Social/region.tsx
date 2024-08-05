@@ -167,9 +167,14 @@ export default class RegionSocialInfluence extends React.Component<any, any> {
         <Divider />
         <Row>
           {this.state.chartDataList.map((chartData, index) => {
+            let chartTitle = '';
+            if (chartData.length > 0) {
+              const { owner, repo } = chartData[0];
+              chartTitle = `${owner}/${repo}`;
+            }
             return (
               <Col span={12} key={`region_social_influence_chart__${index}`}>
-                <RegionSocialInfluenceChart data={chartData} />
+                <RegionSocialInfluenceChart data={chartData} title={chartTitle} />
               </Col>
             );
           })}

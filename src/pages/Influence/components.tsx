@@ -9,6 +9,15 @@ export class RegionSocialInfluenceChart extends React.Component<any, any> {
     // yField: 'social_influence_value',
     yField: 'mapped_social_influence_value',
     colorField: 'login_location',
+    legend: {
+      color: {
+        layout: {
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        position: 'bottom',
+      },
+    },
     // The normalize might make some data into NaN or infinity
     // normalize: { basis: 'first', groupBy: 'color' },
 
@@ -39,6 +48,7 @@ export class RegionSocialInfluenceChart extends React.Component<any, any> {
         // colorField="login_location"
         {...RegionSocialInfluenceChart.config}
         data={this.props.data}
+        title={this.props.title}
       />
     );
   }
